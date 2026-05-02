@@ -1,0 +1,8 @@
+---
+---
+@charset "UTF-8";
+
+/* Theme override: this site ships its own stylesheet at /css/front.css.
+   Jekyll's default theme tries to compile its own assets/css/style.scss,
+   which has encoding issues on some Ruby/sass versions. This local file
+   takes precedence and resolves to a no-op stylesheet. */

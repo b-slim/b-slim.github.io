@@ -65,8 +65,9 @@ layout: null
         <a class="nav__brand" href="#top">{{ site.name }}</a>
         <ul class="nav__links">
             <li><a href="#about">About</a></li>
-            <li><a href="#now">Now</a></li>
+            <li><a href="#experience">Experience</a></li>
             <li><a href="#projects">Projects</a></li>
+            <li><a href="#publications">Publications</a></li>
             <li><a href="#connect">Connect</a></li>
         </ul>
     </nav>
@@ -76,6 +77,7 @@ layout: null
         <img class="avatar" src="{{ site.avatar_img_path }}" alt="Portrait of {{ site.name }}" width="160" height="160" loading="eager" decoding="async">
         {% endif %}
         <h1 class="hero__title">{{ site.name }}</h1>
+        {% if site.role %}<p class="hero__role">{{ site.role }}</p>{% endif %}
         <p class="hero__tagline">{{ site.tagline | default: site.description }}</p>
         {% if site.location %}
         <p class="hero__meta">
@@ -102,13 +104,64 @@ layout: null
         <div class="section__inner">
             <h2 class="section__title" id="about-title">About</h2>
             {% if site.about %}
-            <p class="section__lead">{{ site.about }}</p>
+                {% if site.about.first %}
+                    {% for p in site.about %}
+                    <p class="section__lead">{{ p }}</p>
+                    {% endfor %}
+                {% else %}
+                    <p class="section__lead">{{ site.about }}</p>
+                {% endif %}
+            {% endif %}
+
+            {% if site.skills and site.skills.size > 0 %}
+            <ul class="chips" role="list" aria-label="Skills">
+                {% for s in site.skills %}<li class="chip">{{ s }}</li>{% endfor %}
+            </ul>
+            {% endif %}
+
+            {% if site.education and site.education.size > 0 %}
+            <div class="education">
+                <h3 class="subhead">Education</h3>
+                <ul class="education__list" role="list">
+                    {% for e in site.education %}
+                    <li>
+                        <strong>{{ e.degree }}</strong> · {{ e.school }}
+                        {% if e.detail %}<div class="education__detail">{{ e.detail }}</div>{% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
             {% endif %}
         </div>
     </section>
 
+    {% if site.experience and site.experience.size > 0 %}
+    <section class="section section--alt" id="experience" aria-labelledby="experience-title">
+        <div class="section__inner">
+            <h2 class="section__title" id="experience-title">Experience</h2>
+            <ol class="timeline" role="list">
+                {% for j in site.experience %}
+                <li class="timeline__item">
+                    <div class="timeline__marker" aria-hidden="true"></div>
+                    <div class="timeline__body">
+                        <div class="timeline__head">
+                            <h3 class="timeline__role">{{ j.role }}</h3>
+                            <span class="timeline__period">{{ j.period }}</span>
+                        </div>
+                        <p class="timeline__where">
+                            <strong>{{ j.company }}</strong>{% if j.location %} · <span>{{ j.location }}</span>{% endif %}
+                        </p>
+                        {% if j.summary %}<p class="timeline__summary">{{ j.summary }}</p>{% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ol>
+        </div>
+    </section>
+    {% endif %}
+
     {% if site.now and site.now.size > 0 %}
-    <section class="section section--alt" id="now" aria-labelledby="now-title">
+    <section class="section" id="now" aria-labelledby="now-title">
         <div class="section__inner">
             <h2 class="section__title" id="now-title">
                 Now
@@ -123,7 +176,7 @@ layout: null
     </section>
     {% endif %}
 
-    <section class="section" id="projects" aria-labelledby="projects-title">
+    <section class="section section--alt" id="projects" aria-labelledby="projects-title">
         <div class="section__inner">
             <h2 class="section__title" id="projects-title">Projects</h2>
             <p class="section__lead">{% if site.projects.auto and site.github.public_repositories and site.github.public_repositories.size > 0 %}Public work pulled live from GitHub.{% else %}A few things I've been involved with.{% endif %}</p>
@@ -186,6 +239,37 @@ layout: null
             {% endif %}
         </div>
     </section>
+
+    {% if site.publications and site.publications.size > 0 %}
+    <section class="section" id="publications" aria-labelledby="publications-title">
+        <div class="section__inner">
+            <h2 class="section__title" id="publications-title">Publications</h2>
+            <p class="section__lead">Selected peer-reviewed work.</p>
+            <ul class="pubs" role="list">
+                {% for pub in site.publications %}
+                <li class="pub">
+                    <h3 class="pub__title">{{ pub.title }}</h3>
+                    <p class="pub__venue">{{ pub.venue }}</p>
+                    <div class="pub__links">
+                        {% if pub.url %}
+                        <a class="link-arrow" href="{{ pub.url }}" rel="noopener">
+                            View publication
+                            <svg width="14" height="14" aria-hidden="true"><use href="#i-arrow"/></svg>
+                        </a>
+                        {% endif %}
+                        {% if pub.preprint_url %}
+                        <a class="link-arrow link-arrow--muted" href="{{ pub.preprint_url }}" rel="noopener">
+                            Preprint
+                            <svg width="14" height="14" aria-hidden="true"><use href="#i-arrow"/></svg>
+                        </a>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+    {% endif %}
 
     <section class="section section--alt" id="connect" aria-labelledby="connect-title">
         <div class="section__inner">

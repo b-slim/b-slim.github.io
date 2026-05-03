@@ -166,10 +166,38 @@ img { max-width: 100%; display: block; }
     text-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
 }
 
+.hero__role {
+    margin: 0 auto 0.75rem;
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.92);
+    letter-spacing: 0.02em;
+}
+.hero__role::before {
+    content: "";
+    display: inline-block;
+    width: 22px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.6);
+    vertical-align: middle;
+    margin-right: 0.6rem;
+    transform: translateY(-2px);
+}
+.hero__role::after {
+    content: "";
+    display: inline-block;
+    width: 22px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.6);
+    vertical-align: middle;
+    margin-left: 0.6rem;
+    transform: translateY(-2px);
+}
+
 .hero__tagline {
     margin: 0 auto 1rem;
-    max-width: 620px;
-    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    max-width: 680px;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
     color: rgba(255, 255, 255, 0.92);
     font-weight: 400;
 }
@@ -433,6 +461,160 @@ img { max-width: 100%; display: block; }
     transform: translateY(-1px);
 }
 .social:hover svg, .social:focus-visible svg { color: var(--accent); }
+
+/* =========== CHIPS / SKILLS =========== */
+.chips {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.chip {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.85rem;
+    color: var(--fg-muted);
+    font-weight: 500;
+}
+
+/* =========== SUBHEADS =========== */
+.subhead {
+    margin: 2.5rem 0 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--fg-dim);
+}
+
+/* =========== EDUCATION =========== */
+.education__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+}
+.education__list li {
+    color: var(--fg);
+}
+.education__detail {
+    color: var(--fg-muted);
+    font-size: 0.95rem;
+    margin-top: 0.15rem;
+}
+
+/* =========== TIMELINE / EXPERIENCE =========== */
+.timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    counter-reset: tl;
+}
+.timeline::before {
+    content: "";
+    position: absolute;
+    left: 11px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background: var(--border);
+    border-radius: 1px;
+}
+.timeline__item {
+    position: relative;
+    padding-left: 2.25rem;
+    padding-bottom: 1.5rem;
+}
+.timeline__item:last-child { padding-bottom: 0; }
+.timeline__marker {
+    position: absolute;
+    left: 4px;
+    top: 8px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--bg-alt);
+    border: 3px solid var(--accent);
+    box-shadow: 0 0 0 4px var(--bg-alt);
+}
+.timeline__body {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+}
+.timeline__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+.timeline__role {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--fg);
+}
+.timeline__period {
+    font-size: 0.85rem;
+    color: var(--fg-dim);
+    white-space: nowrap;
+}
+.timeline__where {
+    margin: 0.25rem 0 0.6rem;
+    color: var(--fg-muted);
+    font-size: 0.95rem;
+}
+.timeline__where strong { color: var(--accent-2); font-weight: 600; }
+.timeline__summary {
+    margin: 0;
+    color: var(--fg-muted);
+    font-size: 0.95rem;
+}
+
+/* =========== PUBLICATIONS =========== */
+.pubs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--gap);
+}
+.pub {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    border-left: 3px solid var(--accent);
+}
+.pub__title {
+    margin: 0 0 0.4rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--fg);
+    line-height: 1.35;
+}
+.pub__venue {
+    margin: 0 0 0.75rem;
+    color: var(--fg-muted);
+    font-size: 0.9rem;
+    font-style: italic;
+}
+.pub__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    font-size: 0.9rem;
+}
+.link-arrow--muted { color: var(--fg-muted); font-weight: 500; }
+.link-arrow--muted:hover, .link-arrow--muted:focus-visible { color: var(--accent); }
 
 /* =========== FOOTER =========== */
 .footer {

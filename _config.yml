@@ -1,8 +1,8 @@
 # Site
 name: Slim Bouguerra
 title: Slim Bouguerra
-tagline: "Computer scientist by day. Rock climber and backcountry skier by every other waking hour."
-description: "Slim Bouguerra — distributed systems engineer, climber, and backcountry skier."
+tagline: "Code, climb, ski, repeat."
+description: "Slim Bouguerra — distributed systems engineer working on data infrastructure. Long-time contributor to Apache Druid, Hive, and Calcite."
 location: "Pacific Northwest, USA"
 url: "https://b-slim.github.io"
 baseurl: ""
@@ -12,10 +12,12 @@ theme_color: "#0b1220"
 
 # About — short paragraph rendered on the page
 about: >
-  I work on large-scale data systems and query engines. I'm drawn to gnarly
-  performance problems, careful API design, and the kind of code that has to
-  keep running at 3 a.m. Outside of computers, you'll find me on alpine
-  granite, on a glacier, or skinning up something steep.
+  I work on large-scale data systems — query engines, storage, and the messy
+  middle where the two meet. I've spent years contributing to Apache Druid,
+  Apache Hive, and Apache Calcite, and I'm drawn to gnarly performance
+  problems and code that has to keep running at 3 a.m. Outside of computers,
+  you'll find me on alpine granite, on a glacier, or skinning up something
+  steep.
 
 # Now — what I'm focused on right now (https://nownownow.com/about)
 now:
@@ -34,14 +36,18 @@ projects:
   featured:
     - druid
     - hive
+    - calcite
   # Manual fallback list (used when auto: false or build cannot reach the API)
   manual:
     - name: "Apache Druid"
       url: "https://github.com/apache/druid"
-      description: "High-performance real-time analytics database. Long-time committer."
+      description: "High-performance real-time analytics database. Long-time contributor."
     - name: "Apache Hive"
       url: "https://github.com/apache/hive"
-      description: "Data warehouse software for reading, writing and managing large datasets."
+      description: "SQL data warehouse over distributed storage. Contributor focused on the query engine."
+    - name: "Apache Calcite"
+      url: "https://github.com/apache/calcite"
+      description: "Dynamic data management framework — SQL parser, optimizer, and rules engine."
 
 # Social — only platforms that actually exist and that you use
 github_username: b-slim

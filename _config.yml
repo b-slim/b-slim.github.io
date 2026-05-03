@@ -1,27 +1,95 @@
 # Site
 name: Slim Bouguerra
 title: Slim Bouguerra
-tagline: "Computer scientist by day. Rock climber and backcountry skier by every other waking hour."
-description: "Slim Bouguerra — distributed systems engineer, climber, and backcountry skier."
-location: "Pacific Northwest, USA"
+role: "Software Engineering Manager at LinkedIn"
+tagline: "I build exa-scale SQL data infrastructure on Trino. PMC member at Apache Druid, committer at Apache Hive. Climber and backcountry skier when the laptop closes."
+description: "Slim Bouguerra — Software Engineering Manager at LinkedIn working on exa-scale SQL data infrastructure (Trino). PMC member of Apache Druid, committer at Apache Hive."
+location: "San Jose, California"
 url: "https://b-slim.github.io"
 baseurl: ""
 repository: "b-slim/b-slim.github.io"
 lang: en
 theme_color: "#0b1220"
 
-# About — short paragraph rendered on the page
-about: >
-  I work on large-scale data systems and query engines. I'm drawn to gnarly
-  performance problems, careful API design, and the kind of code that has to
-  keep running at 3 a.m. Outside of computers, you'll find me on alpine
-  granite, on a glacier, or skinning up something steep.
+# About — paragraphs rendered on the page (use a YAML list for multiple paragraphs)
+about:
+  - >
+    I'm a Software Engineering Manager at LinkedIn, leading a team that designs,
+    builds and operates exa-scale SQL data platforms on Trino (Presto). With
+    10+ years in distributed data processing, I've shipped systems that range
+    from sub-second OLAP over petabytes to SQL data-warehousing over exabytes
+    of data lake.
+  - >
+    I'm a PMC member of <strong>Apache Druid</strong> and a committer at
+    <strong>Apache Hive</strong>, with active contributions to
+    <strong>Apache Calcite</strong>. I care deeply about query optimization,
+    performance, and the kind of code that keeps running at 3 a.m.
+  - >
+    Outside of computers, you'll find me on alpine granite, on a glacier,
+    or skinning up something steep.
+
+# Skills surfaced as chips
+skills:
+  - Trino
+  - SQL
+  - OLAP
+  - Distributed Systems
+  - Data Infrastructure
+  - Apache Druid
+  - Apache Hive
+  - Apache Calcite
+  - Query Optimization
+  - Java
+
+# Education
+education:
+  - school: "Institut Polytechnique de Grenoble (Grenoble INP)"
+    degree: "PhD, Computer Science"
+    detail: "Multi-objective fault-tolerance scheduling for parallel and distributed systems."
+
+# Experience timeline (most recent first)
+experience:
+  - company: "LinkedIn"
+    role: "Software Engineering Manager"
+    period: "Sep 2022 — Present"
+    location: "Sunnyvale, CA"
+    summary: "Lead the team behind LinkedIn's exa-scale Trino platform — query optimization, reliability, and capacity for the largest analytics workloads at the company."
+  - company: "LinkedIn"
+    role: "Staff Software Engineer"
+    period: "Mar 2020 — Feb 2023"
+    location: "Sunnyvale, CA"
+    summary: "Built and scaled core SQL infrastructure on Trino. Drove performance, query planning, and federation work."
+  - company: "Cloudera"
+    role: "Staff Software Engineer"
+    period: "Jun 2016 — Mar 2020"
+    location: "Santa Clara, CA"
+    summary: "Brought Apache Druid to the Hortonworks Data Platform. Deep work across Hive and Druid integration."
+  - company: "Yahoo"
+    role: "Software Engineer (Druid Project)"
+    period: "Oct 2014 — Oct 2016"
+    location: "Urbana-Champaign, IL"
+    summary: "Designed and implemented algorithms processing hundreds of billions of data points per day on Apache Druid."
+  - company: "INRIA & UIUC Joint Lab / Argonne National Laboratory"
+    role: "Postdoctoral Researcher"
+    period: "Feb 2012 — Oct 2014"
+    location: "Urbana-Champaign · Greater Chicago"
+    summary: "Failure prediction, fault tolerance, and parallel job scheduling for large-scale supercomputers."
+
+# Selected publications
+publications:
+  - title: "Apache Hive: From MapReduce to Enterprise-grade Big Data Warehousing"
+    venue: "SIGMOD 2019 — Proceedings of the 2019 International Conference on Management of Data"
+    url: "https://doi.org/10.1145/3299869.3314045"
+    preprint_url: "https://arxiv.org/abs/1903.10970"
+  - title: "Improving the Computing Efficiency of HPC Systems Using a Combination of Proactive and Preventive Checkpointing"
+    venue: "IEEE IPDPS 2013 — 27th International Symposium on Parallel & Distributed Processing"
+    url: "https://ieeexplore.ieee.org/document/6569837/"
 
 # Now — what I'm focused on right now (https://nownownow.com/about)
 now:
-  - "Working on distributed query execution and storage performance."
-  - "Training for spring alpine objectives in the North Cascades."
-  - "Skinning out as many spring corn laps as my legs allow."
+  - "Scaling LinkedIn's Trino platform — query optimization and reliability at exa-scale."
+  - "Pushing on Apache Druid PMC work and reviewing community PRs."
+  - "Climbing granite in the Sierras and chasing spring corn on skis."
 
 # Projects shown on the page. Set `auto: true` to pull top public repos from GitHub
 # at build time (requires the jekyll-github-metadata plugin, which GitHub Pages
@@ -34,14 +102,18 @@ projects:
   featured:
     - druid
     - hive
+    - calcite
   # Manual fallback list (used when auto: false or build cannot reach the API)
   manual:
     - name: "Apache Druid"
       url: "https://github.com/apache/druid"
-      description: "High-performance real-time analytics database. Long-time committer."
+      description: "High-performance real-time analytics database. PMC member."
     - name: "Apache Hive"
       url: "https://github.com/apache/hive"
-      description: "Data warehouse software for reading, writing and managing large datasets."
+      description: "SQL data warehouse over distributed storage. Core committer."
+    - name: "Apache Calcite"
+      url: "https://github.com/apache/calcite"
+      description: "Dynamic data management framework — SQL parser, optimizer, and rules engine."
 
 # Social — only platforms that actually exist and that you use
 github_username: b-slim

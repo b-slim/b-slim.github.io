@@ -404,7 +404,7 @@ function sortBy(col){if(sortCol===col)sortDir=-sortDir;else{sortCol=col;sortDir=
 function render(){
   const f=getFiltered();
   f.sort((a,b)=>{let av=a[sortCol],bv=b[sortCol];if(sortCol==='logged_grade'){av=gradeIdx(av);bv=gradeIdx(bv);}return av<bv?-sortDir:av>bv?sortDir:0;});
-  document.querySelectorAll('thead th').forEach(th=>{th.classList.remove('sorted');th.querySelector('.si').textContent='↕';});
+  document.querySelectorAll('thead th').forEach(th=>{th.classList.remove('sorted');const si=th.querySelector('.si');if(si)si.textContent='↕';});
   const th=document.getElementById('th-'+sortCol);
   if(th){th.classList.add('sorted');th.querySelector('.si').textContent=sortDir===1?'↑':'↓';}
   const total=f.length,pages=Math.max(1,Math.ceil(total/PG));

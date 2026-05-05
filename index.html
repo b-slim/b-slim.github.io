@@ -69,6 +69,7 @@ layout: null
             <li><a href="#projects">Projects</a></li>
             <li><a href="#publications">Publications</a></li>
             <li><a href="#connect">Connect</a></li>
+            <li><a href="/logbook/">Logbook</a></li>
         </ul>
     </nav>
 
@@ -175,6 +176,37 @@ layout: null
         </div>
     </section>
     {% endif %}
+
+    <section class="section" id="climbing" aria-labelledby="climbing-title">
+        <div class="section__inner">
+            <h2 class="section__title" id="climbing-title">On the Board</h2>
+            <p class="section__lead">Six years of Tension Board sessions, logged and charted.</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:var(--gap);margin-bottom:2rem">
+                <div style="background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem">
+                    <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--fg-dim);margin-bottom:.4rem">Ascents</div>
+                    <div style="font-size:2rem;font-weight:800;color:var(--accent)">661</div>
+                </div>
+                <div style="background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem">
+                    <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--fg-dim);margin-bottom:.4rem">Unique Climbs</div>
+                    <div style="font-size:2rem;font-weight:800;color:var(--accent-2)">389</div>
+                </div>
+                <div style="background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem">
+                    <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--fg-dim);margin-bottom:.4rem">Hardest Send</div>
+                    <div style="font-size:2rem;font-weight:800">7b/V8</div>
+                </div>
+                <div style="background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem">
+                    <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--fg-dim);margin-bottom:.4rem">Session Days</div>
+                    <div style="font-size:2rem;font-weight:800">155</div>
+                </div>
+            </div>
+            <p class="section__more">
+                <a class="link-arrow" href="/logbook/">
+                    View full logbook
+                    <svg width="16" height="16" aria-hidden="true"><use href="#i-arrow"/></svg>
+                </a>
+            </p>
+        </div>
+    </section>
 
     <section class="section section--alt" id="projects" aria-labelledby="projects-title">
         <div class="section__inner">

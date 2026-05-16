@@ -33,12 +33,14 @@ jobs:
           patch -p1 -d "$SITE" < patches/main.patch
 
       - name: Download / sync Tension Board database
+        if: ${{ secrets.TENSION_USERNAME != '' && secrets.TENSION_PASSWORD != '' }}
         env:
           TENSION_PASSWORD: ${{ secrets.TENSION_PASSWORD }}
         run: |
           boardlib database tension tension.db --username=${{ secrets.TENSION_USERNAME }}
 
       - name: Export logbook to CSV
+        if: ${{ secrets.TENSION_USERNAME != '' && secrets.TENSION_PASSWORD != '' }}
         env:
           TENSION_PASSWORD: ${{ secrets.TENSION_PASSWORD }}
         run: |
@@ -48,9 +50,11 @@ jobs:
             --output=logbook.csv
 
       - name: Build logbook.json
+        if: ${{ secrets.TENSION_USERNAME != '' && secrets.TENSION_PASSWORD != '' }}
         run: python3 scripts/csv_to_json.py logbook.csv logbook.json
 
       - name: Commit and push if data changed
+        if: ${{ secrets.TENSION_USERNAME != '' && secrets.TENSION_PASSWORD != '' }}
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"

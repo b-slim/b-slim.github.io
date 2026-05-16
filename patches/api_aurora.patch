@@ -1,0 +1,31 @@
+--- a/boardlib/api/aurora.py
++++ b/boardlib/api/aurora.py
+@@ -581,21 +581,19 @@
+     )
+     full_logbook_df["date"] = pd.to_datetime(full_logbook_df["date"])
+ 
+-    full_logbook_df = (
+-        full_logbook_df.groupby(["climb_name", "is_mirror", "angle"])
+-        .apply(calculate_sessions_count)
+-        .reset_index(drop=True)
++    full_logbook_df = full_logbook_df.sort_values(by="date").reset_index(drop=True)
++    full_logbook_df["sessions_count"] = (
++        full_logbook_df.groupby(["climb_name", "is_mirror", "angle"])["date"]
++        .transform(lambda x: x.dt.date.rank(method="dense").astype(int))
+     )
+-    full_logbook_df = (
+-        full_logbook_df.groupby(["climb_name", "is_mirror", "angle"])
+-        .apply(calculate_tries_total)
+-        .reset_index(drop=True)
++    full_logbook_df["tries_total"] = (
++        full_logbook_df.groupby(["climb_name", "is_mirror", "angle"])["tries"]
++        .transform("cumsum")
+     )
+ 
+     full_logbook_df["is_repeat"] = full_logbook_df.duplicated(
+         subset=["climb_name", "is_mirror", "angle"], keep="first"
+     )
+-    full_logbook_df = full_logbook_df.sort_values(by="date")
+ 
+     return full_logbook_df
+ 

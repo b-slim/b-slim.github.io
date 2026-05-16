@@ -1,0 +1,12 @@
+--- a/boardlib/__main__.py
++++ b/boardlib/__main__.py
+@@ -111,7 +111,7 @@
+             return
+         
+         token = get_aurora_login_token(args.board, args.username)
+-        entries = boardlib.api.aurora.logbook_entries(args.board, token, args.database_path).to_dict(orient="records")
++        entries = boardlib.api.aurora.logbook_entries(args.board, token, args.database_path.resolve()).to_dict(orient="records")
+ 
+     if args.output:
+         with open(args.output, "w", encoding="utf-8") as output_file:
+\ No newline at end of file

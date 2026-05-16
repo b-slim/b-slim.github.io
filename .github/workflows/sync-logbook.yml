@@ -1,0 +1,64 @@
+name: Sync Tension Board Logbook
+
+on:
+  schedule:
+    # Every Sunday at 06:00 UTC
+    - cron: "0 6 * * 0"
+  workflow_dispatch:  # allow manual runs from the Actions tab
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout site
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install boardlib and dependencies
+        run: |
+          pip install boardlib==0.15.1 Pillow
+
+      - name: Apply boardlib patches
+        run: |
+          SITE=$(pip show boardlib | awk '/^Location:/ {print $2}')
+          patch -p1 -d "$SITE" < patches/db_aurora.patch
+          patch -p1 -d "$SITE" < patches/api_aurora.patch
+          patch -p1 -d "$SITE" < patches/main.patch
+
+      - name: Download / sync Tension Board database
+        env:
+          TENSION_PASSWORD: ${{ secrets.TENSION_PASSWORD }}
+        run: |
+          boardlib database tension tension.db --username=${{ secrets.TENSION_USERNAME }}
+
+      - name: Export logbook to CSV
+        env:
+          TENSION_PASSWORD: ${{ secrets.TENSION_PASSWORD }}
+        run: |
+          boardlib logbook tension \
+            --username=${{ secrets.TENSION_USERNAME }} \
+            --database-path=tension.db \
+            --output=logbook.csv
+
+      - name: Build logbook.json
+        run: python3 scripts/csv_to_json.py logbook.csv logbook.json
+
+      - name: Commit and push if data changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add logbook.json logbook.csv
+          if git diff --cached --quiet; then
+            echo "No changes to logbook data."
+          else
+            ROWS=$(python3 -c "import csv; print(sum(1 for _ in open('logbook.csv'))-1)")
+            git commit -m "chore: sync logbook (${ROWS} entries) [skip ci]"
+            git push
+          fi

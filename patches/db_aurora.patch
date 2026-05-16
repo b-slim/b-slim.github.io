@@ -1,0 +1,118 @@
+--- a/boardlib/db/aurora.py
++++ b/boardlib/db/aurora.py
+@@ -57,7 +57,8 @@
+     :param database: The path to the SQLite database file.
+     :return: A dictionary mapping table names to their last synchronized date.
+     """
+-    with sqlite3.connect(database) as connection:
++    connection = sqlite3.connect(database)
++    try:
+         result = connection.execute(
+             "SELECT table_name, last_synchronized_at FROM shared_syncs"
+         )
+@@ -65,6 +66,8 @@
+             table_name: last_synchronized_at
+             for table_name, last_synchronized_at in result.fetchall()
+         }
++    finally:
++        connection.close()
+ 
+ 
+ def sync_shared_tables(database, sync_result):
+@@ -74,15 +77,18 @@
+     :param database: The path to the SQLite database file.
+     :param row_counts: A dictionary mapping table names to number of rows inserted/updated/deleted.
+     """
+-    with sqlite3.connect(database) as connection:
++    connection = sqlite3.connect(database)
++    try:
+         row_counts = {}
+         for table_name, rows in sync_result.items():
+             ROW_INSERTERS.get(table_name, insert_rows_default)(
+                 connection, table_name, rows
+             )
+             row_counts[table_name] = len(rows)
+-
++        connection.commit()
+         return row_counts
++    finally:
++        connection.close()
+ 
+ 
+ def insert_rows_default(connection, table_name, rows):
+@@ -141,39 +147,52 @@
+ 
+ 
+ def get_difficulty(database, climb_uuid, angle):
+-    with sqlite3.connect(database) as connection:
++    connection = sqlite3.connect(database)
++    try:
+         results = connection.execute(
+             "SELECT display_difficulty, benchmark_difficulty FROM climb_stats WHERE climb_uuid = ? AND angle = ?",
+             (climb_uuid, angle),
+         )
+         return next(results, [None, None])
++    finally:
++        connection.close()
+ 
+ 
+ def get_difficulty_mapping(database):
+-    with sqlite3.connect(database) as connection:
++    connection = sqlite3.connect(database)
++    try:
+         return {
+             row[0]: row[1]
+             for row in connection.execute(
+                 "SELECT difficulty, boulder_name FROM difficulty_grades"
+             )
+         }
++    finally:
++        connection.close()
+ 
+ 
+ def get_climb_name(database, climb_uuid):
+-    with sqlite3.connect(database) as connection:
++    connection = sqlite3.connect(database)
++    try:
+         results = connection.execute(
+             "SELECT name FROM climbs WHERE uuid = ?", (climb_uuid,)
+         )
+         return next(results, [None])[0]
++    finally:
++        connection.close()
+ 
+ 
+ def get_image_filenames(database):
+-    with sqlite3.connect(database) as connection:
++    connection = sqlite3.connect(database)
++    try:
+         results = connection.execute("SELECT image_filename FROM product_sizes_layouts_sets WHERE image_filename IS NOT NULL")
+         return [row[0] for row in results]
++    finally:
++        connection.close()
+ 
+ def get_layouts_images_dict(database):
+-    with sqlite3.connect(database) as connection:
++    connection = sqlite3.connect(database)
++    try:
+         results = connection.execute(
+             """
+             SELECT
+@@ -181,14 +200,15 @@
+                 s.name product_size_name,
+                 p.image_filename
+             FROM product_sizes_layouts_sets p
+-            INNER JOIN 
++            INNER JOIN
+                 (SELECT id, name FROM layouts) AS l ON p.layout_id = l.id
+             INNER JOIN
+                 (SELECT id, name FROM product_sizes) AS s ON p.product_size_id = s.id;
+             """
+         )
+-
+         layouts_images_dict = collections.defaultdict(list)
+         for row in results:
+             layouts_images_dict[(row[0],row[1])].append(row[2])
+         return layouts_images_dict
++    finally:
++        connection.close()

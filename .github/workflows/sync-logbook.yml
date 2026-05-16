@@ -7,6 +7,7 @@ on:
   workflow_dispatch:  # allow manual runs from the Actions tab
 
 env:
+  TENSION_USERNAME: ${{ secrets.TENSION_USERNAME }}
   TENSION_PASSWORD: ${{ secrets.TENSION_PASSWORD }}
 
 jobs:
@@ -16,6 +17,17 @@ jobs:
       contents: write
 
     steps:
+      - name: Check required secrets
+        run: |
+          missing=()
+          [[ -z "$TENSION_USERNAME" ]] && missing+=(TENSION_USERNAME)
+          [[ -z "$TENSION_PASSWORD" ]] && missing+=(TENSION_PASSWORD)
+          if [[ ${#missing[@]} -gt 0 ]]; then
+            echo "::error::Missing required secrets: ${missing[*]}"
+            echo "Add them at: Settings → Secrets and variables → Actions"
+            exit 1
+          fi
+
       - name: Checkout site
         uses: actions/checkout@v4
 
@@ -35,12 +47,12 @@ jobs:
           patch -p1 -d "$SITE" < patches/main.patch
 
       - name: Sync Tension Board database
-        run: boardlib database tension tension.db --username=bslim
+        run: boardlib database tension tension.db --username="$TENSION_USERNAME"
 
       - name: Export logbook to CSV
         run: |
           boardlib logbook tension \
-            --username=bslim \
+            --username="$TENSION_USERNAME" \
             --database-path=tension.db \
             --output=logbook.csv
 

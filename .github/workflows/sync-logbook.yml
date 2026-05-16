@@ -6,6 +6,9 @@ on:
     - cron: "0 6 * * 0"
   workflow_dispatch:  # allow manual runs from the Actions tab
 
+env:
+  TENSION_PASSWORD: ${{ secrets.TENSION_PASSWORD }}
+
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -22,8 +25,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install boardlib and dependencies
-        run: |
-          pip install boardlib==0.15.1 Pillow
+        run: pip install boardlib==0.15.1 Pillow
 
       - name: Apply boardlib patches
         run: |
@@ -32,18 +34,13 @@ jobs:
           patch -p1 -d "$SITE" < patches/api_aurora.patch
           patch -p1 -d "$SITE" < patches/main.patch
 
-      - name: Download / sync Tension Board database
-        env:
-          TENSION_PASSWORD: ${{ secrets.TENSION_PASSWORD }}
-        run: |
-          boardlib database tension tension.db --username=${{ secrets.TENSION_USERNAME }}
+      - name: Sync Tension Board database
+        run: boardlib database tension tension.db --username=bslim
 
       - name: Export logbook to CSV
-        env:
-          TENSION_PASSWORD: ${{ secrets.TENSION_PASSWORD }}
         run: |
           boardlib logbook tension \
-            --username=${{ secrets.TENSION_USERNAME }} \
+            --username=bslim \
             --database-path=tension.db \
             --output=logbook.csv
 

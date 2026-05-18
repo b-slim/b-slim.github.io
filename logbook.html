@@ -7,8 +7,8 @@ layout: null
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tension Board Logbook — {{ site.name }}</title>
-<meta name="description" content="My Tension Board climbing logbook — 682 entries since 2020.">
+<title>Climbing Logbook — {{ site.name }}</title>
+<meta name="description" content="My climbing logbook — Tension Board and Kilter Board sessions, logged and charted.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -200,6 +200,8 @@ td.muted { color: var(--fg-muted); }
 .tag-benchmark { border-color: rgba(108,182,255,.35); color: var(--accent-2); }
 .tag-repeat    { border-color: rgba(80,220,150,.35); color: #50dc96; }
 .tag-mirror    { }
+.tag-tension   { border-color: rgba(255,122,69,.35); color: var(--accent); }
+.tag-kilter    { border-color: rgba(160,120,255,.45); color: #b78bff; }
 
 /* Pagination */
 .lb-paging {
@@ -234,7 +236,7 @@ footer.footer { margin-top: 0; }
 </header>
 
 <div class="lb-hero">
-  <h1 class="lb-hero__title">Tension Board Logbook</h1>
+  <h1 class="lb-hero__title">Climbing Logbook</h1>
   <p class="lb-hero__sub" id="lb-daterange">Loading…</p>
 </div>
 
@@ -277,6 +279,11 @@ footer.footer { margin-top: 0; }
 </div>
 
 <div class="lb-filters">
+  <select id="f-board">
+    <option value="">All boards</option>
+    <option value="tension">Tension</option>
+    <option value="kilter">Kilter</option>
+  </select>
   <select id="f-grade"><option value="">All grades</option></select>
   <select id="f-angle"><option value="">All angles</option></select>
   <select id="f-year"><option value="">All years</option></select>
@@ -321,8 +328,8 @@ footer.footer { margin-top: 0; }
 
 <script>
 // data loaded via fetch
-const GRADE_ORDER=['4a/V0','4b/V0','4c/V0','5a/V1','5b/V1','5c/V2','6a/V3','6a+/V3','6b/V4','6b+/V4','6c/V5','6c+/V5','7a/V6','7a+/V7','7b/V8'];
-const GRADE_COLOR={'4a/V0':'#52c77a','4b/V0':'#52c77a','4c/V0':'#52c77a','5a/V1':'#96d45a','5b/V1':'#96d45a','5c/V2':'#d4e030','6a/V3':'#f5c431','6a+/V3':'#f5c431','6b/V4':'#f5903a','6b+/V4':'#f5903a','6c/V5':'#f56040','6c+/V5':'#f56040','7a/V6':'#e83050','7a+/V7':'#c01868','7b/V8':'#9018c4'};
+const GRADE_ORDER=['4a/V0','4b/V0','4c/V0','5a/V1','5b/V1','5c/V2','6a/V3','6a+/V3','6b/V4','6b+/V4','6c/V5','6c+/V5','7a/V6','7a+/V7','7b/V8','7b+/V8','7c/V9','7c+/V10','8a/V11'];
+const GRADE_COLOR={'4a/V0':'#52c77a','4b/V0':'#52c77a','4c/V0':'#52c77a','5a/V1':'#96d45a','5b/V1':'#96d45a','5c/V2':'#d4e030','6a/V3':'#f5c431','6a+/V3':'#f5c431','6b/V4':'#f5903a','6b+/V4':'#f5903a','6c/V5':'#f56040','6c+/V5':'#f56040','7a/V6':'#e83050','7a+/V7':'#c01868','7b/V8':'#9018c4','7b+/V8':'#9018c4','7c/V9':'#6018a8','7c+/V10':'#6018a8','8a/V11':'#3a0a78'};
 function gradeIdx(g){return GRADE_ORDER.indexOf(g);}
 
 function init(RAW){
@@ -374,21 +381,22 @@ const angles=Object.keys(ac).map(Number).sort((a,b)=>a-b);
 new Chart(document.getElementById('chart-angle'),{type:'bar',data:{labels:angles.map(a=>a+'°'),datasets:[{data:angles.map(a=>ac[a]),backgroundColor:'rgba(108,182,255,0.5)',borderColor:'#6cb6ff',borderWidth:1,borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{...chartDefaults,grid:chartDefaults.grid},y:{...chartDefaults,grid:chartDefaults.grid,beginAtZero:true}}}});
 
 // Filters
-const fG=document.getElementById('f-grade'),fA=document.getElementById('f-angle'),fY=document.getElementById('f-year'),fT=document.getElementById('f-type'),fS=document.getElementById('f-search');
+const fB=document.getElementById('f-board'),fG=document.getElementById('f-grade'),fA=document.getElementById('f-angle'),fY=document.getElementById('f-year'),fT=document.getElementById('f-type'),fS=document.getElementById('f-search');
 GRADE_ORDER.filter(g=>gc[g]||data.some(r=>r.logged_grade===g)).forEach(g=>{fG.innerHTML+=`<option value="${g}">${g}</option>`;});
 angles.forEach(a=>{fA.innerHTML+=`<option value="${a}">${a}°</option>`;});
 years.forEach(y=>{fY.innerHTML+=`<option value="${y}">${y}</option>`;});
-[fG,fA,fY,fT].forEach(el=>el.addEventListener('change',()=>{page=1;render();}));
+[fB,fG,fA,fY,fT].forEach(el=>el.addEventListener('change',()=>{page=1;render();}));
 fS.addEventListener('input',()=>{page=1;render();});
-function resetFilters(){fG.value='';fA.value='';fY.value='';fT.value='';fS.value='';page=1;render();}
+function resetFilters(){fB.value='';fG.value='';fA.value='';fY.value='';fT.value='';fS.value='';page=1;render();}
 
 // Table
 let sortCol='date',sortDir=-1,page=1;
 const PG=25;
 
 function getFiltered(){
-  const g=fG.value,a=fA.value,y=fY.value,t=fT.value,q=fS.value.toLowerCase().trim();
+  const b=fB.value,g=fG.value,a=fA.value,y=fY.value,t=fT.value,q=fS.value.toLowerCase().trim();
   return data.filter(r=>{
+    if(b&&r.board!==b)return false;
     if(g&&r.logged_grade!==g)return false;
     if(a&&r.angle!==parseInt(a))return false;
     if(y&&r.date.getFullYear()!==parseInt(y))return false;
@@ -416,7 +424,8 @@ function render(){
   tbody.innerHTML=slice.map(r=>{
     const col=GRADE_COLOR[r.logged_grade]||'#7d889b';
     const gHtml=r.logged_grade?`<span class="grade-pill" style="background:${col}">${r.logged_grade}</span>`:'<span style="color:var(--fg-dim)">—</span>';
-    const flags=[!r.is_ascent?'<span class="tag tag-bid">bid</span>':'',r.is_benchmark?'<span class="tag tag-benchmark">★ benchmark</span>':'',r.is_repeat?'<span class="tag tag-repeat">repeat</span>':'',r.is_mirror?'<span class="tag tag-mirror">mirror</span>':''].filter(Boolean).join('');
+    const boardTag=r.board?`<span class="tag tag-${r.board}">${r.board}</span>`:'';
+    const flags=[boardTag,!r.is_ascent?'<span class="tag tag-bid">bid</span>':'',r.is_benchmark?'<span class="tag tag-benchmark">★ benchmark</span>':'',r.is_repeat?'<span class="tag tag-repeat">repeat</span>':'',r.is_mirror?'<span class="tag tag-mirror">mirror</span>':''].filter(Boolean).join('');
     return `<tr>
       <td class="muted">${r.date.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})}</td>
       <td class="name" title="${r.climb_name}">${r.climb_name}</td>
@@ -439,11 +448,13 @@ function render(){
 }
 render();
 }
-fetch('/logbook.json')
-  .then(r=>r.json())
-  .then(init)
+Promise.all([
+  fetch('/logbook.json').then(r=>r.json()).catch(()=>[]),
+  fetch('/kilter.json').then(r=>r.json()).catch(()=>[])
+])
+  .then(([t,k])=>init([...t,...k]))
   .catch(()=>{
-    document.getElementById('tbody').innerHTML=
+    document.getElementById('lb-tbody').innerHTML=
       '<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--fg-muted)">Failed to load logbook data.</td></tr>';
   });
 </script>

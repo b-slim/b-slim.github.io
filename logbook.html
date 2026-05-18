@@ -705,7 +705,10 @@ function initOutdoor(RAW){
     const f=ogetFiltered();
     f.sort((a,b)=>{
       let av=a[osortCol],bv=b[osortCol];
-      if(osortCol==='grade_v'){av=av==null?-1:av;bv=bv==null?-1:bv;}
+      if(osortCol==='grade_v'){
+        av=a.grade_v_sort==null?-Infinity:a.grade_v_sort;
+        bv=b.grade_v_sort==null?-Infinity:b.grade_v_sort;
+      }
       return av<bv?-osortDir:av>bv?osortDir:0;
     });
     document.querySelectorAll('thead th[id^="oth-"]').forEach(th=>{th.classList.remove('sorted');const si=th.querySelector('.si');if(si)si.textContent='↕';});

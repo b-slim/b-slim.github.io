@@ -38,8 +38,11 @@ def fetch_csv(user_id: str, slug: str = "x") -> str:
         return resp.read().decode("utf-8")
 
 
+_V_RE = re.compile(r"^[Vv](\d+)([+\-])?(?:[\-]?(\d+))?")
+
+
 def parse_v_grade(rating):
-    """Map an MP boulder rating string to a base integer V-grade.
+    """Map an MP boulder rating to a base integer V-grade for bucketing.
 
     Examples: 'V0' -> 0, 'V-easy' -> 0, 'V8+' -> 8, 'V2-3' -> 2,
     'V8+ PG13' -> 8, 'V7-' -> 7. Returns None if unparseable.
@@ -49,10 +52,36 @@ def parse_v_grade(rating):
     s = rating.strip()
     if s.lower().startswith("v-easy"):
         return 0
-    m = re.match(r"^[Vv](\d+)", s)
+    m = _V_RE.match(s)
     if m:
         return int(m.group(1))
     return None
+
+
+def parse_v_grade_sort(rating):
+    """Numeric sort key honoring +/- modifiers and ranges.
+
+    'V8-' -> 7.7, 'V8' -> 8.0, 'V8+' -> 8.3, 'V7-8' -> 7.5,
+    'V-easy' -> 0.0. Returns None if unparseable.
+    """
+    if not rating:
+        return None
+    s = rating.strip()
+    if s.lower().startswith("v-easy"):
+        return 0.0
+    m = _V_RE.match(s)
+    if not m:
+        return None
+    base = int(m.group(1))
+    mod = m.group(2)
+    high = m.group(3)
+    if high is not None:
+        return (base + int(high)) / 2.0
+    if mod == "+":
+        return base + 0.3
+    if mod == "-":
+        return base - 0.3
+    return float(base)
 
 
 def is_ascent(style: str) -> bool:
@@ -78,6 +107,7 @@ def to_row(r: dict) -> dict:
         "date": r.get("Date", "").strip(),
         "logged_grade": rating,
         "grade_v": parse_v_grade(rating),
+        "grade_v_sort": parse_v_grade_sort(rating),
         "is_ascent": is_ascent(r.get("Style", "")),
         "style": r.get("Style", "").strip(),
         "location": r.get("Location", "").strip(),

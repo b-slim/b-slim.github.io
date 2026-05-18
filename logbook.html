@@ -202,6 +202,24 @@ td.muted { color: var(--fg-muted); }
 .tag-mirror    { }
 .tag-tension   { border-color: rgba(255,122,69,.35); color: var(--accent); }
 .tag-kilter    { border-color: rgba(160,120,255,.45); color: #b78bff; }
+.tag-outdoor   { border-color: rgba(80,220,150,.35); color: #50dc96; }
+
+.lb-section-divider {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--pad);
+}
+.lb-section-divider hr {
+  border: 0; border-top: 1px solid var(--border);
+  margin: clamp(1rem,3vw,2rem) 0 0;
+}
+.lb-hero--sub .lb-hero__title { font-size: clamp(1.4rem,4vw,2rem); }
+
+td a { color: var(--fg); text-decoration: none; border-bottom: 1px dotted var(--border-strong); }
+td a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.stars { letter-spacing: 1px; font-size: .85rem; }
+.stars__on  { color: #f5c431; }
+.stars__off { color: var(--bg-alt); }
 
 /* Pagination */
 .lb-paging {
@@ -321,6 +339,79 @@ footer.footer { margin-top: 0; }
     </div>
   </div>
 </div>
+
+<section id="outdoor-section" style="display:none;">
+  <div class="lb-section-divider"><hr></div>
+
+  <div class="lb-hero lb-hero--sub">
+    <h2 class="lb-hero__title">Outdoor Bouldering</h2>
+    <p class="lb-hero__sub" id="o-daterange">Loading…</p>
+  </div>
+
+  <div class="lb-stats">
+    <div class="lb-stat">
+      <div class="lb-stat__label">Sends</div>
+      <div class="lb-stat__value lb-stat__value--accent" id="o-ascents">—</div>
+      <div class="lb-stat__detail" id="o-bids">—</div>
+    </div>
+    <div class="lb-stat">
+      <div class="lb-stat__label">Unique Boulders</div>
+      <div class="lb-stat__value lb-stat__value--blue" id="o-unique">—</div>
+      <div class="lb-stat__detail" id="o-areas">—</div>
+    </div>
+    <div class="lb-stat">
+      <div class="lb-stat__label">Hardest Send</div>
+      <div class="lb-stat__value" id="o-hardest">—</div>
+      <div class="lb-stat__detail" id="o-hardest-name">—</div>
+    </div>
+    <div class="lb-stat">
+      <div class="lb-stat__label">Session Days</div>
+      <div class="lb-stat__value" id="o-days">—</div>
+      <div class="lb-stat__detail" id="o-years">—</div>
+    </div>
+  </div>
+
+  <div class="lb-charts" style="grid-template-columns:1fr;">
+    <div class="lb-card">
+      <p class="lb-card__title">Outdoor V-Grade Pyramid (sends)</p>
+      <div id="o-pyramid"></div>
+    </div>
+  </div>
+
+  <div class="lb-filters">
+    <select id="of-grade"><option value="">All grades</option></select>
+    <select id="of-year"><option value="">All years</option></select>
+    <select id="of-type">
+      <option value="">All types</option>
+      <option value="ascent">Sends</option>
+      <option value="bid">Attempts</option>
+    </select>
+    <input id="of-search" type="text" placeholder="Search route…">
+    <button class="lb-btn" onclick="oResetFilters()">Reset</button>
+    <span class="lb-count" id="o-count"></span>
+  </div>
+
+  <div class="lb-table-wrap">
+    <div class="lb-table-card">
+      <table>
+        <thead><tr>
+          <th onclick="oSortBy('date')" id="oth-date">Date <span class="si">↕</span></th>
+          <th onclick="oSortBy('climb_name')" id="oth-climb_name">Route <span class="si">↕</span></th>
+          <th onclick="oSortBy('grade_v')" id="oth-grade_v">Grade <span class="si">↕</span></th>
+          <th>Style</th>
+          <th>Location</th>
+          <th>Stars</th>
+          <th>Comment</th>
+        </tr></thead>
+        <tbody id="o-tbody"></tbody>
+      </table>
+      <div class="lb-paging">
+        <span class="lb-paging__info" id="opg-info"></span>
+        <div class="lb-paging__btns" id="opg-btns"></div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <footer class="footer">
   <p>© {{ site.time | date: '%Y' }} {{ site.name }}. Built with Jekyll on GitHub Pages.</p>
@@ -457,6 +548,123 @@ Promise.all([
     document.getElementById('lb-tbody').innerHTML=
       '<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--fg-muted)">Failed to load logbook data.</td></tr>';
   });
+
+// ── Outdoor (Mountain Project) section ──────────────────────────────
+const V_ORDER=['V0','V1','V2','V3','V4','V5','V6','V7','V8','V9','V10','V11','V12','V13','V14','V15'];
+const V_COLOR={V0:'#52c77a',V1:'#96d45a',V2:'#d4e030',V3:'#f5c431',V4:'#f5903a',V5:'#f56040',V6:'#e83050',V7:'#c01868',V8:'#9018c4',V9:'#6018a8',V10:'#6018a8',V11:'#3a0a78',V12:'#3a0a78',V13:'#3a0a78',V14:'#3a0a78',V15:'#3a0a78'};
+
+let oSortBy, oResetFilters;
+function initOutdoor(RAW){
+  if(!RAW||!RAW.length)return;
+  document.getElementById('outdoor-section').style.display='';
+  const data=RAW.map(r=>({...r,date:new Date(r.date+'T12:00:00')}));
+  const ascents=data.filter(r=>r.is_ascent);
+  const bids=data.filter(r=>!r.is_ascent);
+  const unique=new Set(ascents.map(r=>r.climb_name.toLowerCase())).size;
+  const areas=new Set(data.map(r=>(r.location||'').split('>')[0].trim()).filter(Boolean));
+  let bv=-1,bn='',bg='';
+  for(const r of ascents){if(r.grade_v!=null&&r.grade_v>bv){bv=r.grade_v;bn=r.climb_name;bg=r.logged_grade;}}
+  const sessionDays=new Set(data.map(r=>r.date.toDateString())).size;
+  const years=[...new Set(data.map(r=>r.date.getFullYear()))].sort();
+  const sorted=[...data].sort((a,b)=>a.date-b.date);
+  const fmt=d=>d.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
+
+  document.getElementById('o-daterange').textContent=fmt(sorted[0].date)+' — '+fmt(sorted[sorted.length-1].date);
+  document.getElementById('o-ascents').textContent=ascents.length;
+  document.getElementById('o-bids').textContent=bids.length+' attempts';
+  document.getElementById('o-unique').textContent=unique;
+  document.getElementById('o-areas').textContent=areas.size+' areas';
+  document.getElementById('o-hardest').textContent=bg||'—';
+  document.getElementById('o-hardest-name').textContent=bn||'—';
+  document.getElementById('o-days').textContent=sessionDays;
+  document.getElementById('o-years').textContent='across '+years.length+' years';
+
+  // Pyramid
+  const gc={};for(const r of ascents){if(r.grade_v==null)continue;const k='V'+r.grade_v;gc[k]=(gc[k]||0)+1;}
+  const maxG=Math.max(...Object.values(gc),1);
+  const pyr=document.getElementById('o-pyramid');
+  V_ORDER.filter(g=>gc[g]).forEach(g=>{
+    const pct=Math.round(gc[g]/maxG*100);
+    const col=V_COLOR[g]||'#888';
+    pyr.innerHTML+=`<div class="grade-row"><span class="grade-row__label">${g}</span><div class="grade-row__track"><div class="grade-row__fill" style="width:${pct}%;background:${col}">${gc[g]}</div></div></div>`;
+  });
+
+  // Filters
+  const fG=document.getElementById('of-grade'),fY=document.getElementById('of-year'),fT=document.getElementById('of-type'),fS=document.getElementById('of-search');
+  const gradesSeen=new Set(data.map(r=>r.grade_v).filter(v=>v!=null).map(v=>'V'+v));
+  V_ORDER.filter(g=>gradesSeen.has(g)).forEach(g=>{fG.innerHTML+=`<option value="${g}">${g}</option>`;});
+  years.forEach(y=>{fY.innerHTML+=`<option value="${y}">${y}</option>`;});
+  [fG,fY,fT].forEach(el=>el.addEventListener('change',()=>{opage=1;oRender();}));
+  fS.addEventListener('input',()=>{opage=1;oRender();});
+  oResetFilters=()=>{fG.value='';fY.value='';fT.value='';fS.value='';opage=1;oRender();};
+
+  // Table
+  let osortCol='date',osortDir=-1,opage=1;
+  const OPG=25;
+
+  function ogetFiltered(){
+    const g=fG.value,y=fY.value,t=fT.value,q=fS.value.toLowerCase().trim();
+    return data.filter(r=>{
+      if(g&&('V'+r.grade_v)!==g)return false;
+      if(y&&r.date.getFullYear()!==parseInt(y))return false;
+      if(t==='ascent'&&!r.is_ascent)return false;
+      if(t==='bid'&&r.is_ascent)return false;
+      if(q&&!r.climb_name.toLowerCase().includes(q))return false;
+      return true;
+    });
+  }
+  oSortBy=(col)=>{if(osortCol===col)osortDir=-osortDir;else{osortCol=col;osortDir=-1;}opage=1;oRender();};
+
+  function stars(n){
+    if(n==null)return'';
+    const full=Math.round(n);
+    return `<span class="stars"><span class="stars__on">${'★'.repeat(full)}</span><span class="stars__off">${'★'.repeat(Math.max(0,4-full))}</span></span>`;
+  }
+  function escapeHtml(s){return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+  function oRender(){
+    const f=ogetFiltered();
+    f.sort((a,b)=>{
+      let av=a[osortCol],bv=b[osortCol];
+      if(osortCol==='grade_v'){av=av==null?-1:av;bv=bv==null?-1:bv;}
+      return av<bv?-osortDir:av>bv?osortDir:0;
+    });
+    document.querySelectorAll('thead th[id^="oth-"]').forEach(th=>{th.classList.remove('sorted');const si=th.querySelector('.si');if(si)si.textContent='↕';});
+    const th=document.getElementById('oth-'+osortCol);
+    if(th){th.classList.add('sorted');const si=th.querySelector('.si');if(si)si.textContent=osortDir===1?'↑':'↓';}
+    const total=f.length,pages=Math.max(1,Math.ceil(total/OPG));
+    opage=Math.min(opage,pages);
+    const slice=f.slice((opage-1)*OPG,opage*OPG);
+    document.getElementById('o-count').textContent=total+' entries';
+    const tbody=document.getElementById('o-tbody');
+    tbody.innerHTML=slice.map(r=>{
+      const key=r.grade_v!=null?'V'+r.grade_v:null;
+      const col=(key&&V_COLOR[key])||'#7d889b';
+      const gHtml=r.logged_grade?`<span class="grade-pill" style="background:${col}">${escapeHtml(r.logged_grade)}</span>`:'<span style="color:var(--fg-dim)">—</span>';
+      const styleTag=r.style?`<span class="tag">${escapeHtml(r.style)}</span>`:'<span style="color:var(--fg-dim)">—</span>';
+      const locShort=(r.location||'').split(' > ').slice(-2).join(' › ');
+      const nameHtml=r.url?`<a href="${escapeHtml(r.url)}" target="_blank" rel="noopener">${escapeHtml(r.climb_name)}</a>`:escapeHtml(r.climb_name);
+      return `<tr>
+        <td class="muted">${r.date.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})}</td>
+        <td class="name" title="${escapeHtml(r.climb_name)}">${nameHtml}</td>
+        <td>${gHtml}</td>
+        <td>${styleTag}</td>
+        <td class="muted" title="${escapeHtml(r.location)}">${escapeHtml(locShort)}</td>
+        <td>${stars(r.avg_stars)}</td>
+        <td class="muted">${escapeHtml(r.comment)}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('opg-info').textContent=`Page ${opage} of ${pages}`;
+    const pb=document.getElementById('opg-btns');pb.innerHTML='';
+    const btn=(label,p,active,disabled)=>{const b=document.createElement('button');b.className='pg-btn'+(active?' active':'');b.textContent=label;b.disabled=disabled;b.onclick=()=>{opage=p;oRender();};pb.appendChild(b);};
+    btn('‹',opage-1,false,opage===1);
+    const s=Math.max(1,opage-2),e=Math.min(pages,opage+2);
+    for(let p=s;p<=e;p++)btn(p,p,p===opage,false);
+    btn('›',opage+1,false,opage===pages);
+  }
+  oRender();
+}
+fetch('/mountainproject.json').then(r=>r.json()).then(initOutdoor).catch(()=>{});
 </script>
 </body>
 </html>

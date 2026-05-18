@@ -1,0 +1,51 @@
+name: Sync Mountain Project Logbook
+
+on:
+  schedule:
+    # Every 2 days at 07:00 UTC (offset 1h from the Tension sync)
+    - cron: "0 7 */2 * *"
+  workflow_dispatch:
+
+env:
+  # Numeric MP user id. Set in: Settings → Secrets and variables → Actions → Variables
+  # Profile must be public for the tick-export endpoint to work without auth.
+  MP_USER_ID: ${{ vars.MP_USER_ID }}
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check required variables
+        run: |
+          if [[ -z "$MP_USER_ID" ]]; then
+            echo "::error::Missing required variable MP_USER_ID"
+            echo "Add it at: Settings → Secrets and variables → Actions → Variables"
+            exit 1
+          fi
+
+      - name: Checkout site
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Fetch tick export and build mountainproject.json
+        run: python3 scripts/mp_import.py mountainproject.json
+
+      - name: Commit and push if data changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add mountainproject.json
+          if git diff --cached --quiet; then
+            echo "No changes to Mountain Project data."
+          else
+            ROWS=$(python3 -c "import json; print(len(json.load(open('mountainproject.json'))))")
+            git commit -m "chore: sync mountainproject (${ROWS} entries) [skip ci]"
+            git push
+          fi

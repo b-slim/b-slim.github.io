@@ -204,16 +204,53 @@ td.muted { color: var(--fg-muted); }
 .tag-kilter    { border-color: rgba(160,120,255,.45); color: #b78bff; }
 .tag-outdoor   { border-color: rgba(80,220,150,.35); color: #50dc96; }
 
-.lb-section-divider {
+/* Tabs */
+.lb-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: 0 var(--pad);
+  padding: 0 var(--pad) 1.25rem;
 }
-.lb-section-divider hr {
-  border: 0; border-top: 1px solid var(--border);
-  margin: clamp(1rem,3vw,2rem) 0 0;
+.lb-tab {
+  display: inline-flex; align-items: center; gap: .55rem;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  color: var(--fg-muted);
+  padding: .55rem 1.15rem;
+  border-radius: 999px;
+  font-size: .9rem;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: color .15s, border-color .15s, background .15s;
 }
-.lb-hero--sub .lb-hero__title { font-size: clamp(1.4rem,4vw,2rem); }
+.lb-tab:hover { color: var(--fg); border-color: var(--border-strong); }
+.lb-tab[aria-selected="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.lb-tab__count {
+  font-size: .7rem;
+  font-weight: 700;
+  background: rgba(0,0,0,.22);
+  color: inherit;
+  padding: 1px 7px;
+  border-radius: 999px;
+  min-width: 1.4rem;
+  text-align: center;
+}
+.lb-tab[aria-selected="false"] .lb-tab__count { background: var(--bg-alt); }
+
+.lb-panel__sub {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--pad) clamp(1rem,3vw,1.75rem);
+  color: var(--fg-muted);
+  font-size: 1rem;
+}
 
 td a { color: var(--fg); text-decoration: none; border-bottom: 1px dotted var(--border-strong); }
 td a:hover { color: var(--accent); border-bottom-color: var(--accent); }
@@ -255,8 +292,19 @@ footer.footer { margin-top: 0; }
 
 <div class="lb-hero">
   <h1 class="lb-hero__title">Climbing Logbook</h1>
-  <p class="lb-hero__sub" id="lb-daterange">Loading…</p>
 </div>
+
+<div class="lb-tabs" role="tablist" aria-label="Logbook sections">
+  <button class="lb-tab" data-tab="indoor"  role="tab" aria-selected="true"  aria-controls="panel-indoor">
+    Indoor Boards <span class="lb-tab__count" id="tab-count-indoor">—</span>
+  </button>
+  <button class="lb-tab" data-tab="outdoor" role="tab" aria-selected="false" aria-controls="panel-outdoor" hidden>
+    Outdoor <span class="lb-tab__count" id="tab-count-outdoor">—</span>
+  </button>
+</div>
+
+<div id="panel-indoor" class="lb-panel" role="tabpanel" aria-labelledby="tab-indoor">
+<p class="lb-panel__sub" id="lb-daterange">Loading…</p>
 
 <div class="lb-stats">
   <div class="lb-stat">
@@ -340,13 +388,10 @@ footer.footer { margin-top: 0; }
   </div>
 </div>
 
-<section id="outdoor-section" style="display:none;">
-  <div class="lb-section-divider"><hr></div>
+</div><!-- /#panel-indoor -->
 
-  <div class="lb-hero lb-hero--sub">
-    <h2 class="lb-hero__title">Outdoor Bouldering</h2>
-    <p class="lb-hero__sub" id="o-daterange">Loading…</p>
-  </div>
+<div id="panel-outdoor" class="lb-panel" role="tabpanel" aria-labelledby="tab-outdoor" hidden>
+  <p class="lb-panel__sub" id="o-daterange">Loading…</p>
 
   <div class="lb-stats">
     <div class="lb-stat">
@@ -411,7 +456,7 @@ footer.footer { margin-top: 0; }
       </div>
     </div>
   </div>
-</section>
+</div><!-- /#panel-outdoor -->
 
 <footer class="footer">
   <p>© {{ site.time | date: '%Y' }} {{ site.name }}. Built with Jekyll on GitHub Pages.</p>
@@ -439,6 +484,7 @@ const sorted=[...data].sort((a,b)=>a.date-b.date);
 const fmt=d=>d.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
 
 document.getElementById('lb-daterange').textContent=fmt(sorted[0].date)+' — '+fmt(sorted[sorted.length-1].date);
+document.getElementById('tab-count-indoor').textContent=data.length;
 document.getElementById('s-ascents').textContent=ascents.length;
 document.getElementById('s-bids').textContent=bids.length+' bids';
 document.getElementById('s-unique').textContent=unique;
@@ -539,6 +585,37 @@ function render(){
 }
 render();
 }
+// ── Tabs ────────────────────────────────────────────────────────────
+function activateTab(name){
+  document.querySelectorAll('.lb-tab').forEach(t=>{
+    t.setAttribute('aria-selected', t.dataset.tab===name?'true':'false');
+  });
+  document.querySelectorAll('.lb-panel').forEach(p=>{
+    p.hidden = p.id !== 'panel-'+name;
+  });
+  if(window.location.hash!=='#'+name){
+    history.replaceState(null,'','#'+name);
+  }
+  // Charts created while hidden render at 0×0; nudge them after the panel shows.
+  if(window.Chart){
+    ['chart-activity','chart-angle'].forEach(id=>{
+      const c=Chart.getChart(id);
+      if(c)requestAnimationFrame(()=>c.resize());
+    });
+  }
+}
+document.querySelectorAll('.lb-tab').forEach(t=>{
+  t.addEventListener('click',()=>activateTab(t.dataset.tab));
+});
+window.addEventListener('hashchange',()=>{
+  const h=window.location.hash.replace('#','');
+  if(h==='indoor'||h==='outdoor')activateTab(h);
+});
+(function(){
+  const h=window.location.hash.replace('#','');
+  activateTab(h==='outdoor'?'outdoor':'indoor');
+})();
+
 Promise.all([
   fetch('/logbook.json').then(r=>r.json()).catch(()=>[]),
   fetch('/kilter.json').then(r=>r.json()).catch(()=>[])
@@ -556,8 +633,10 @@ const V_COLOR={V0:'#52c77a',V1:'#96d45a',V2:'#d4e030',V3:'#f5c431',V4:'#f5903a',
 let oSortBy, oResetFilters;
 function initOutdoor(RAW){
   if(!RAW||!RAW.length)return;
-  document.getElementById('outdoor-section').style.display='';
   const data=RAW.map(r=>({...r,date:new Date(r.date+'T12:00:00')}));
+  document.getElementById('tab-count-outdoor').textContent=data.length;
+  const outdoorTab=document.querySelector('.lb-tab[data-tab="outdoor"]');
+  if(outdoorTab)outdoorTab.hidden=false;
   const ascents=data.filter(r=>r.is_ascent);
   const bids=data.filter(r=>!r.is_ascent);
   const unique=new Set(ascents.map(r=>r.climb_name.toLowerCase())).size;

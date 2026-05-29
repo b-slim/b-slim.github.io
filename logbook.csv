@@ -662,8 +662,8 @@ tension,40,peruse,2026-01-22 07:09:20,4a/V0,4a/V0,True,1,False,1,1,False,True,
 tension,40,Warmin up,2026-01-22 07:20:37,6b+/V4,6b+/V4,True,2,True,1,2,False,True,
 tension,40,Warmin up,2026-01-22 07:26:36,6b+/V4,6b+/V4,True,1,False,1,1,False,True,
 tension,40,Protector of the Skinny Dog,2026-01-22 07:32:40,7a/V6,7a/V6,True,1,True,1,1,False,True,
-tension,40,matrix,2026-02-15 00:00:00,nan,7b/V8,True,1,False,1,1,False,False,nan
 tension,40,Swine’s Darkness,2026-02-15 00:00:00,nan,7a+/V7,True,2,False,1,2,False,False,nan
+tension,40,matrix,2026-02-15 00:00:00,nan,7b/V8,True,1,False,1,1,False,False,nan
 tension,40,sick bored ver.2,2026-02-15 00:00:00,nan,7b/V8,True,4,False,2,5,True,False,nan
 tension,25,easy Boulder,2026-02-15 08:41:36,4a/V0,4a/V0,False,1,False,1,1,False,True,
 tension,25,Starter Home,2026-02-15 08:43:15,4c/V0,4b/V0,False,1,False,1,1,False,True,
@@ -701,3 +701,10 @@ tension,0,Excelsior,2026-05-21 07:31:56,5c/V2,5c/V2,False,1,False,1,1,False,True
 tension,0,Excelsior,2026-05-21 07:34:12,5c/V2,5c/V2,False,1,True,1,1,False,True,
 tension,0,When Crimps Learn To Whistle,2026-05-21 07:43:40,5a/V1,6a+/V3,False,1,True,1,1,False,True,
 tension,0,When Crimps Learn To Whistle,2026-05-21 07:45:23,5a/V1,6a+/V3,False,1,False,1,1,False,True,
+tension,40,mice & warm,2026-05-27 07:22:43,4a/V0,4a/V0,False,1,False,1,1,False,True,
+tension,40,easy peazies,2026-05-27 07:22:48,4a/V0,4a/V0,False,1,False,1,1,False,True,
+tension,40,Seven Seas of Rhye,2026-05-27 07:25:41,4a/V0,4a/V0,False,1,False,1,1,False,True,
+tension,40,Pearl,2026-05-27 07:29:04,4a/V0,4a/V0,False,1,False,1,1,False,True,
+tension,40,peruse,2026-05-27 07:34:01,4a/V0,4a/V0,True,1,True,1,1,False,True,
+tension,40,Egyptian Cat,2026-05-27 07:36:15,4a/V0,4a/V0,False,1,False,1,1,False,True,
+tension,40,Egyptian Cat,2026-05-27 07:38:47,4a/V0,4a/V0,False,1,True,1,1,False,True,

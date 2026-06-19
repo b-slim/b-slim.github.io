@@ -494,8 +494,8 @@ tension,10,CRIMP TRAINER,2025-07-08 07:40:45,5a/V1,5b/V1,False,1,False,8,9,True,
 tension,20,CRIMP TRAINER,2025-07-08 07:47:34,7a/V6,7a/V6,True,1,False,8,8,True,True,
 tension,30,CRIMP TRAINER,2025-07-08 07:56:32,7a+/V7,7a+/V7,False,1,True,4,4,True,True,
 tension,30,CRIMP TRAINER,2025-07-08 07:56:35,7a+/V7,7a+/V7,False,1,True,4,5,True,True,
-tension,45,Roseé,2025-07-12 00:00:00,nan,7b/V8,True,2,False,1,2,False,False,nan
 tension,45,Used,2025-07-12 00:00:00,nan,7c/V9,True,4,False,1,4,False,False,nan
+tension,45,Roseé,2025-07-12 00:00:00,nan,7b/V8,True,2,False,1,2,False,False,nan
 tension,20,Dumbo Wumbo,2025-07-12 08:38:58,6a/V3,6a/V3,True,1,False,1,1,False,True,
 tension,20,BW4,2025-07-12 08:39:11,6b/V4,6b/V4,True,1,False,1,1,False,True,
 tension,30,Dystopian Butter,2025-07-12 08:45:40,6c+/V5,6c+/V5,True,1,False,1,1,False,True,
@@ -662,9 +662,9 @@ tension,40,peruse,2026-01-22 07:09:20,4a/V0,4a/V0,True,1,False,1,1,False,True,
 tension,40,Warmin up,2026-01-22 07:20:37,6b+/V4,6b+/V4,True,2,True,1,2,False,True,
 tension,40,Warmin up,2026-01-22 07:26:36,6b+/V4,6b+/V4,True,1,False,1,1,False,True,
 tension,40,Protector of the Skinny Dog,2026-01-22 07:32:40,7a/V6,7a/V6,True,1,True,1,1,False,True,
-tension,40,Swine’s Darkness,2026-02-15 00:00:00,nan,7a+/V7,True,2,False,1,2,False,False,nan
 tension,40,matrix,2026-02-15 00:00:00,nan,7b/V8,True,1,False,1,1,False,False,nan
 tension,40,sick bored ver.2,2026-02-15 00:00:00,nan,7b/V8,True,4,False,2,5,True,False,nan
+tension,40,Swine’s Darkness,2026-02-15 00:00:00,nan,7a+/V7,True,2,False,1,2,False,False,nan
 tension,25,easy Boulder,2026-02-15 08:41:36,4a/V0,4a/V0,False,1,False,1,1,False,True,
 tension,25,Starter Home,2026-02-15 08:43:15,4c/V0,4b/V0,False,1,False,1,1,False,True,
 tension,25,Good boi,2026-02-15 08:45:47,5a/V1,5a/V1,False,1,False,1,1,False,True,
@@ -708,8 +708,8 @@ tension,40,Pearl,2026-05-27 07:29:04,4a/V0,4a/V0,False,1,False,1,1,False,True,
 tension,40,peruse,2026-05-27 07:34:01,4a/V0,4a/V0,True,1,True,1,1,False,True,
 tension,40,Egyptian Cat,2026-05-27 07:36:15,4a/V0,4a/V0,False,1,False,1,1,False,True,
 tension,40,Egyptian Cat,2026-05-27 07:38:47,4a/V0,4a/V0,False,1,True,1,1,False,True,
-tension,40,Newby Blues,2026-05-30 00:00:00,nan,5a/V1,True,1,True,1,1,False,False,nan
 tension,40,give shorty a foot,2026-05-30 00:00:00,nan,5b/V1,True,1,True,1,1,False,False,nan
+tension,40,Newby Blues,2026-05-30 00:00:00,nan,5a/V1,True,1,True,1,1,False,False,nan
 tension,40,Go Figure,2026-05-30 10:49:55,5a/V1,5a/V1,True,1,False,2,2,True,True,
 tension,40,Riopio,2026-05-30 10:52:45,4a/V0,4a/V0,True,1,True,2,2,True,True,
 tension,40,peruse,2026-05-30 10:54:35,4a/V0,4a/V0,True,1,True,2,2,True,True,
@@ -723,8 +723,8 @@ tension,40,give shorty a foot,2026-06-02 07:32:33,5b/V1,5b/V1,True,1,False,1,1,F
 tension,40,Baby Steps,2026-06-02 07:37:47,5b/V1,5b/V1,True,1,False,1,1,False,True,
 tension,40,Ivory's finest,2026-06-02 07:46:08,6a/V3,6a/V3,True,1,False,1,1,False,True,
 tension,40,Blue Supreme Hat,2026-06-02 08:03:42,6a/V3,6a/V3,True,1,False,1,1,False,True,
-tension,30,HiBrew,2026-06-06 00:00:00,nan,5c/V2,True,2,False,1,2,False,False,nan
 tension,40,Legion,2026-06-06 00:00:00,nan,6c/V5,True,2,True,1,2,False,False,nan
+tension,30,HiBrew,2026-06-06 00:00:00,nan,5c/V2,True,2,False,1,2,False,False,nan
 tension,40,Legion,2026-06-06 00:00:00,nan,6c/V5,True,2,False,3,13,True,False,nan
 tension,0,CRIMP TRAINER,2026-06-06 09:07:51,5a/V1,5b/V1,False,1,False,21,21,True,True,
 tension,0,CRIMP TRAINER,2026-06-06 09:09:43,5a/V1,5b/V1,False,1,True,14,15,True,True,
@@ -741,9 +741,9 @@ tension,20,Legion,2026-06-09 07:37:41,6a/V3,6a/V3,True,1,True,1,1,False,True,
 tension,20,Legion,2026-06-09 07:45:13,6a/V3,6a/V3,True,1,False,1,1,False,True,
 tension,30,Legion,2026-06-09 07:52:59,6c/V5,6c/V5,True,1,True,5,7,True,True,
 tension,30,Legion,2026-06-09 08:00:08,6c/V5,6c/V5,True,1,False,6,10,True,True,
-tension,40,pinch me lefty,2026-06-11 00:00:00,nan,6c/V5,True,1,True,2,2,True,False,nan
-tension,40,SIX TIMES SIX,2026-06-11 00:00:00,nan,7a/V6,True,1,False,2,2,True,False,nan
 tension,40,SIX TIMES SIX,2026-06-11 00:00:00,nan,7a/V6,True,1,True,2,2,True,False,nan
+tension,40,SIX TIMES SIX,2026-06-11 00:00:00,nan,7a/V6,True,1,False,2,2,True,False,nan
+tension,40,pinch me lefty,2026-06-11 00:00:00,nan,6c/V5,True,1,True,2,2,True,False,nan
 tension,10,Fingery,2026-06-11 07:13:14,4a/V0,5a/V1,False,1,False,1,1,False,True,
 tension,10,Fingery,2026-06-11 07:14:52,4a/V0,5a/V1,False,1,True,1,1,False,True,
 tension,20,Fingery,2026-06-11 07:20:20,5c/V2,5c/V2,True,1,True,2,2,True,True,
@@ -768,3 +768,14 @@ tension,10,CRIMP TRAINER,2026-06-16 07:39:50,5a/V1,5b/V1,False,1,False,17,18,Tru
 tension,10,CRIMP TRAINER,2026-06-16 07:39:53,5a/V1,5b/V1,False,1,True,19,21,True,True,
 tension,20,CRIMP TRAINER,2026-06-16 07:40:02,7a/V6,7a/V6,True,1,False,16,17,True,True,
 tension,20,CRIMP TRAINER,2026-06-16 07:46:31,7a/V6,7a/V6,True,1,True,16,18,True,True,
+tension,0,SIX TIMES SIX,2026-06-18 07:20:31,4c/V0,6a/V3,False,1,False,1,1,False,True,
+tension,0,SIX TIMES SIX,2026-06-18 07:22:20,4c/V0,6a/V3,False,1,True,1,1,False,True,
+tension,10,SIX TIMES SIX,2026-06-18 07:30:03,5a/V1,6a+/V3,False,1,False,1,1,False,True,
+tension,10,SIX TIMES SIX,2026-06-18 07:32:10,5a/V1,6a+/V3,False,1,True,1,1,False,True,
+tension,10,SIX TIMES SIX,2026-06-18 07:32:15,5a/V1,6a+/V3,False,1,True,1,2,True,True,
+tension,10,SIX TIMES SIX,2026-06-18 07:32:18,6a/V3,6a+/V3,False,1,True,1,3,True,True,
+tension,20,SIX TIMES SIX,2026-06-18 07:40:50,6b/V4,6b/V4,True,1,False,1,1,False,True,
+tension,20,SIX TIMES SIX,2026-06-18 07:52:21,6b/V4,6b/V4,True,1,True,1,1,False,True,
+tension,30,SIX TIMES SIX,2026-06-18 07:54:04,6c/V5,6c/V5,True,1,False,1,1,False,True,
+tension,30,SIX TIMES SIX,2026-06-18 08:02:14,6c/V5,6c/V5,True,1,True,1,1,False,True,
+tension,40,SIX TIMES SIX,2026-06-18 08:10:07,7a/V6,7a/V6,True,1,False,3,3,True,True,
